@@ -6,6 +6,7 @@ import { Divider } from '@mui/material';
 // Folders
 import Header from './Header';
 import CreateJob from './CreateJob';
+import ListJob from '../components/ListJob';
 
 const Job = () => {
   return (
@@ -15,6 +16,7 @@ const Job = () => {
         padding: "10px 0px 10px 0px"
       }} />
       <CreateJob />
+      <ListJob />
     </>
   );
 };
