@@ -1,49 +1,66 @@
 import React, { useState } from 'react';
 
 // Material UI
-import { Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { Box } from '@mui/system';
-
+import { toast } from 'react-toastify';
 //Icons
 import AddIcon from '@mui/icons-material/Add';
+
+import ButtonGroup from "../common/ButtonGroup";
+import SelectInput from '../common/SelectInput';
+import { toastyWarn } from "../common/ToastyInformation";
 
 // Store
 import { useJobStore } from "../context/JobContext";
 
+const initialState = {
+    jobName: '',
+    priority: ''
+}
 
+const totalPriority = [
+    {
+        id: 1,
+        name: "Urgent"
+    },
+    {
+        id: 2,
+        name: "Regular"
+    },
+    {
+        id: 3,
+        name: "Trivial"
+    }
+]
 const CreateJob = () => {
     const { addJob } = useJobStore();
-    const [jobName, setJobName] = useState('');
-    const [priority, setPriority] = useState('');
-    const [totalPriority, setTotalPriority] = useState([
-        {
-            id: 1,
-            name: "Urgent"
-        },
-        {
-            id: 2,
-            name: "Regular"
-        },
-        {
-            id: 3,
-            name: "Trivial"
-        }
-    ])
-    const handleChangeSelect = (event) => {
-        setPriority(event.target.value);
-    };
+    const [jobInfo, setJobInfo] = useState(initialState);
 
-    const handleChangeInput = e => {
-        setJobName(e.target.value)
+    const handleChange = (e) => {
+        const { value, name } = e.target;
+        setJobInfo({
+            ...jobInfo,
+            [name]: value
+        })
     }
 
     const handleSubmit = e => {
         e.preventDefault()
-        addJob({
-            jobName,
-            priority
-        })
+        const { jobName, priority } = jobInfo;
+        if (jobName === '' || priority === '') {
+            toastyWarn('Job Name and Job Priority must be entered!');
+        }
+        else {
+            addJob({
+                jobName,
+                priority
+            })
+            setJobInfo(initialState);
+        }
+
     }
+    const { jobName, priority } = jobInfo;
     return (
         <div className='header__container'>
             <div className='header__create-new-job'>Create New Job</div>
@@ -53,8 +70,12 @@ const CreateJob = () => {
                         <TextField
                             id="outlined-basic"
                             label="Job Name"
+                            name="jobName"
                             value={jobName}
-                            onChange={handleChangeInput}
+                            onChange={handleChange}
+                            inputProps={{
+                                maxLength: 255,
+                            }}
                             variant="outlined"
                             style={{
                                 width: "100%"
@@ -62,32 +83,16 @@ const CreateJob = () => {
                         />
                     </Grid>
                     <Grid item xs={6} sm={6} md={2}>
-                        <Box sx={{ minWidth: 120 }}>
-                            <FormControl fullWidth>
-                                <InputLabel id="demo-simple-select-label">Job Priority</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    value={priority}
-                                    label="Job Priority"
-                                    onChange={handleChangeSelect}
-                                >
-                                    <MenuItem value="">
-                                        <em>None</em>
-                                    </MenuItem>
-                                    {
-                                        totalPriority.map((pri, index) => {
-                                            return (
-                                                <MenuItem key={index} value={pri.id}>{pri.name}</MenuItem>
-                                            )
-                                        })
-                                    }
-                                </Select>
-                            </FormControl>
-                        </Box>
+                        <SelectInput
+                            data={priority}
+                            name='priority'
+                            label={"Job Priority"}
+                            handleChange={handleChange}
+                            values={totalPriority}
+                        />
                     </Grid>
                     <Grid xs={6} sm={6} item md={2}>
-                        <Button
+                        <ButtonGroup
                             type="submit"
                             startIcon={<AddIcon />}
                             sx={{
@@ -99,7 +104,8 @@ const CreateJob = () => {
                             }}
                             size="large"
                             variant="contained"
-                        >Create</Button>
+                            label={"Create"}
+                        />
                     </Grid>
                 </Grid>
             </form>

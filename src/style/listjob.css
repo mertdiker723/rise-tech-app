@@ -1,0 +1,12 @@
+.table-cell__header {
+    font-weight: 600 !important;
+    color: grey !important
+}
+
+.header__list-all-jobs {
+    font-family: monospace;
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: 30px;
+    margin-bottom: -20px;
+}

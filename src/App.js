@@ -1,11 +1,14 @@
 import React from 'react';
-import Job from './pages/index';
-
+//Material UI
 import { Container } from '@mui/material';
-
+import { ToastContainer } from 'react-toastify';
+// Store
 import JobContextProvider from "./context/JobContext";
-
+//Css
 import "./style/style.css"
+//Folders
+import Job from './pages/index';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   return (
@@ -13,8 +16,8 @@ const App = () => {
       <Container fixed>
         <Job />
       </Container>
+      <ToastContainer />
     </JobContextProvider>
-
   );
 };
 

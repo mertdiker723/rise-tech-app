@@ -27,20 +27,18 @@ const JobContextProvider = (props) => {
         setJobs(jobs.filter(job => job.id !== id));
     }
 
-    const clearList = () => {
-        setJobs([]);
-    }
     const findItem = (id) => {
         const item = jobs.find(job => job.id === id);
         setEditItem(item);
     }
-    const editJob = (title, id) => {
-        const newJobs = jobs.map(job => job.id === id ? { title, id } : job);
+    const editJob = ({ jobName, priority, id }) => {
+        const newJobs = jobs.map(job => job.id === id ? { jobName, priority, id } : job);
+
         setJobs(newJobs);
         setEditItem(null);
     }
     return (
-        <JobContext.Provider value={{ jobs, addJob, removeJob, clearList, findItem, editJob, editItem }}>
+        <JobContext.Provider value={{ jobs, addJob, removeJob, findItem, editJob, editItem, setEditItem }}>
             {props.children}
         </JobContext.Provider>
     )
